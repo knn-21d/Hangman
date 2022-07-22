@@ -12,19 +12,15 @@ namespace Hangman
 {
     public partial class Title : Form
     {
-        public Title()
+        public Title() => InitializeComponent();
+
+        private void Button2_Click(object sender, EventArgs e) // кнопка далее
         {
-            InitializeComponent();
+            HangMain hangMain = new HangMain(); // главное меню
+            hangMain.Show();
+            this.Hide();
         }
 
-        private void button2_Click(object sender, EventArgs e) // кнопка далее
-        {
-            
-        }
-
-        private void button1_Click(object sender, EventArgs e) // кнопка закрыть
-        {
-            this.Close();
-        }
+        private void Button1_Click(object sender, EventArgs e) => Application.Exit(); // кнопка закрыть
     }
 }
