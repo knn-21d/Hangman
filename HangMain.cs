@@ -19,7 +19,6 @@ namespace Hangman
         int difficulty; // сложность
         int tries; // использовано попыток
         string word; // текущее слово
-        List<char> guessed; // список использованных букв
         int winsCount; // счётчик побед
         int lossesCount; // счётчик поражений
         bool gameOver = true; // состояние завершения игры, начинается с true, чтобы первый запуск игры не засчитывал поражение
@@ -78,7 +77,6 @@ namespace Hangman
             tries = 0; // при запуске новой игры происходит сброс (передача начальных значений) игровых параметров
             difficulty = 7;
             gameOver = false;
-            guessed = new List<char>();
             string[] dictionary = File.ReadAllLines(@"./dictionary.txt"); // словарь
             Random random = new Random();
             word = dictionary[random.Next(0, dictionary.Length)]; // слово выбирается случайным образом
@@ -101,11 +99,15 @@ namespace Hangman
         {
             if (!gameOver)
             {
-                if (guessed.Contains(guess))
+                if (used.Text.Contains(guess))
                 {
                     return;
                 }
-                else if (word.Contains(guess))
+                else
+                {
+                    used.Text += $" {guess} ";
+                }
+                if (word.Contains(guess))
                 {
                     char[] chars = new char[word.Length]; // промежуточный массив символов главной строки
                     for (int i = 0; i < word.Length; i++)
@@ -120,17 +122,11 @@ namespace Hangman
                         }
                     }
                     current_line.Text = new string(chars); // обратно в строку
-                    guessed.Add(guess);
                 }
                 else
                 {
-                    guessed.Add(guess);
                     tries++;
                     display.Image = Image.FromFile($@"./display/{tries}.png"); // смена картинки
-                }
-                if (!used.Text.Contains(guess))
-                {
-                    used.Text += $" {guess} ";
                 }
                 finishing();
             }
