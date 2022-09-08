@@ -484,7 +484,7 @@
             // 
             this.used.Location = new System.Drawing.Point(9, 266);
             this.used.Name = "used";
-            this.used.Size = new System.Drawing.Size(167, 18);
+            this.used.Size = new System.Drawing.Size(411, 18);
             this.used.TabIndex = 38;
             this.used.Text = "Used:";
             // 
