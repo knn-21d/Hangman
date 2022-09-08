@@ -106,7 +106,7 @@
             // resetScoreToolStripMenuItem
             // 
             this.resetScoreToolStripMenuItem.Name = "resetScoreToolStripMenuItem";
-            this.resetScoreToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetScoreToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.resetScoreToolStripMenuItem.Text = "Reset Score";
             this.resetScoreToolStripMenuItem.Click += new System.EventHandler(this.resetScoreToolStripMenuItem_Click);
             // 
@@ -246,7 +246,7 @@
             // 
             // b26
             // 
-            this.b26.Location = new System.Drawing.Point(104, 220);
+            this.b26.Location = new System.Drawing.Point(104, 217);
             this.b26.Name = "b26";
             this.b26.Size = new System.Drawing.Size(40, 40);
             this.b26.TabIndex = 11;
@@ -276,7 +276,7 @@
             // 
             // b27
             // 
-            this.b27.Location = new System.Drawing.Point(150, 220);
+            this.b27.Location = new System.Drawing.Point(150, 217);
             this.b27.Name = "b27";
             this.b27.Size = new System.Drawing.Size(40, 40);
             this.b27.TabIndex = 14;
@@ -306,7 +306,7 @@
             // 
             // b28
             // 
-            this.b28.Location = new System.Drawing.Point(196, 220);
+            this.b28.Location = new System.Drawing.Point(196, 217);
             this.b28.Name = "b28";
             this.b28.Size = new System.Drawing.Size(40, 40);
             this.b28.TabIndex = 17;
@@ -336,7 +336,7 @@
             // 
             // b29
             // 
-            this.b29.Location = new System.Drawing.Point(242, 220);
+            this.b29.Location = new System.Drawing.Point(242, 217);
             this.b29.Name = "b29";
             this.b29.Size = new System.Drawing.Size(40, 40);
             this.b29.TabIndex = 20;
@@ -366,7 +366,7 @@
             // 
             // b30
             // 
-            this.b30.Location = new System.Drawing.Point(288, 220);
+            this.b30.Location = new System.Drawing.Point(288, 217);
             this.b30.Name = "b30";
             this.b30.Size = new System.Drawing.Size(40, 40);
             this.b30.TabIndex = 23;
@@ -396,7 +396,7 @@
             // 
             // b31
             // 
-            this.b31.Location = new System.Drawing.Point(334, 220);
+            this.b31.Location = new System.Drawing.Point(334, 217);
             this.b31.Name = "b31";
             this.b31.Size = new System.Drawing.Size(40, 40);
             this.b31.TabIndex = 26;
@@ -426,7 +426,7 @@
             // 
             // b32
             // 
-            this.b32.Location = new System.Drawing.Point(380, 220);
+            this.b32.Location = new System.Drawing.Point(380, 217);
             this.b32.Name = "b32";
             this.b32.Size = new System.Drawing.Size(40, 40);
             this.b32.TabIndex = 29;

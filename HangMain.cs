@@ -22,10 +22,10 @@ namespace Hangman
         List<char> guessed; // список использованных букв
         int winsCount; // счётчик побед
         int lossesCount; // счётчик поражений
-        bool gameOver; // состояние завершения игры
+        bool gameOver = true; // состояние завершения игры, начинается с true, чтобы первый запуск игры не засчитывал поражение
         public HangMain()
         {
-            this.KeyPreview = true; // включает считывание с клавиатуры
+            this.KeyPreview = true; // включает считывание с клавиатуры, приём нажатой клавиши со всей формы
             try // попытка считать файл со счётом
             { 
                 string score = File.ReadAllText(@"./score.txt"); // строка из файла
@@ -68,15 +68,20 @@ namespace Hangman
             about.ShowDialog();
         }
 
-        private void newGameToolStripMenuItem_Click(object sender, EventArgs e) // новая игра
+        private void newGameToolStripMenuItem_Click(object sender, EventArgs e) // кнопка новая игра
         {
-            tries = 0;
+            if (!gameOver)
+            {
+                lossesCount++; // если предыдущая игра не была завершена, то она считается проигранной
+                writeScore();
+            }
+            tries = 0; // при запуске новой игры происходит сброс (передача начальных значений) игровых параметров
             difficulty = 7;
             gameOver = false;
             guessed = new List<char>();
             string[] dictionary = File.ReadAllLines(@"./dictionary.txt"); // словарь
             Random random = new Random();
-            word = dictionary[random.Next(0, dictionary.Length)];
+            word = dictionary[random.Next(0, dictionary.Length)]; // слово выбирается случайным образом
             current_line.Text = ""; // сброс лейбла
             display.Image = Image.FromFile($@"./display/{tries}.png"); // сброс дисплея с картинкой
             for (int i = 0; i < word.Length; i++)
@@ -86,44 +91,21 @@ namespace Hangman
             used.Text = "Used:";
             if (word.Contains('Ё'))
             {
-                word = word.Replace('Ё', 'Е');
+                word = word.Replace('Ё', 'Е'); // метод не изменяет исходной строки, поэтому выполняется присваивание
             }
             
             check(word[0]); // открытие первой буквы
             check(word[word.Length - 1]); // открытие последней буквы
         }
-        public bool open(char guess) // функция проверки наличия буквы
-        {
-            bool found = false;
-            for (int i = 0; i < word.Length; i++)
-            {
-                if (guess == word[i])
-                {
-                    found = true;
-                    break;
-                }
-            }
-            return found;
-        }
-        public void let(object sender)
-        {
-            if (word == null || gameOver) // если игра в процессе
-            {
-                return;
-            }
-            char guess = char.Parse(((Button)sender).Text); // считывание нажатие кнопки по тексту на ней
-            check(guess);
-        }
-
         private void check(char guess) // функция открывает букву
         {
             if (!gameOver)
             {
                 if (guessed.Contains(guess))
                 {
-
+                    return;
                 }
-                else if (open(guess))
+                else if (word.Contains(guess))
                 {
                     char[] chars = new char[word.Length]; // промежуточный массив символов главной строки
                     for (int i = 0; i < word.Length; i++)
@@ -137,10 +119,8 @@ namespace Hangman
                             chars[i] = current_line.Text[i];
                         }
                     }
-
-                    current_line.Text = new string(chars);
+                    current_line.Text = new string(chars); // обратно в строку
                     guessed.Add(guess);
-                    used.Text += $" {guess} ";
                 }
                 else
                 {
@@ -148,31 +128,49 @@ namespace Hangman
                     tries++;
                     display.Image = Image.FromFile($@"./display/{tries}.png"); // смена картинки
                 }
-                if (current_line.Text == word)
+                if (!used.Text.Contains(guess))
                 {
-                    winsCount++;
-                    writeScore();
-                    gameOver = true;
-                    Endgame endgame = new Endgame(); // форма с сообщением о победе
-                    endgame.label2.Text = "You win!";
-                    endgame.ShowDialog();
+                    used.Text += $" {guess} ";
                 }
-                else if (tries >= difficulty)
-                {
-                    lossesCount++;
-                    current_line.Text = word;
-                    writeScore();
-                    gameOver = true;
-                    Endgame endgame = new Endgame(); // либо о поражении
-                    endgame.label2.Text = "You lose";
-                    endgame.ShowDialog();
-                }
+                finishing();
+            }
+        }
+        private void finishing() // функция завершения игры
+        {
+            if (current_line.Text == word)
+            {
+                winsCount++;
+                writeScore();
+                gameOver = true;
+                Endgame endgame = new Endgame(); // форма с сообщением о победе
+                endgame.label2.Text = "You win!";
+                endgame.ShowDialog();
+            }
+            else if (tries >= difficulty)
+            {
+                lossesCount++;
+                current_line.Text = word;
+                writeScore();
+                gameOver = true;
+                Endgame endgame = new Endgame(); // либо о поражении
+                endgame.label2.Text = "You lose";
+                endgame.ShowDialog();
+            }
+            else
+            {
+                return;
             }
         }
 
         private void button_Click(object sender, EventArgs e) // объединённый метод кнопок
         {
-            let(sender);
+            if (word == null || gameOver) // если игра не в процессе, функция завершается
+            {
+                return;
+            }
+            char guess = char.Parse(((Button)sender).Text); // считывание нажатия кнопки по тексту на ней
+            check(guess); // открыть букву
+            // ((Button)sender) приводит тип объекта, это нужно для обращения к тексту объекта Button
         }
 
         private void keyPressHandler(object sender, KeyPressEventArgs e) // функция считывания с клавиатуры
@@ -183,7 +181,7 @@ namespace Hangman
 
                 if (word != null && !gameOver) // если игра в процессе
                 {
-                    char guess = char.Parse(c.ToString().ToUpper()); // нажатая клавиша
+                    char guess = char.Parse(c.ToString().ToUpper()); // нажатая клавиша в верхнем регистре
                     if (guess == 'Ё')
                     {
                         check('Е');
@@ -204,7 +202,7 @@ namespace Hangman
 
         private void writeScore() // функция записи счёта
         {
-            using (StreamWriter writer = new StreamWriter(@".\score.txt", false)) // сохранение счёта для следующих запусков, false для перезаписи
+            using (StreamWriter writer = new StreamWriter(@".\score.txt", false)) // сохранение счёта для следующих запусков, false для перезаписи, иначе дописывать будет
             {
                 writer.WriteLine(winsCount);
                 writer.WriteLine(lossesCount);
